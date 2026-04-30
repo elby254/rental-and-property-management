@@ -6,7 +6,7 @@ export default function PropertyCard({ property, onEdit, onDelete }) {
   const navigate = useNavigate();
   const isOwner =
     user?.role === "landlord" &&
-    property.landlordID?.toString() === user._id;
+    property.landlordID?.toString() === user._id?.toString();
 
   const image =
     property.images && property.images.length > 0

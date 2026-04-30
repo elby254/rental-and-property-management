@@ -76,6 +76,10 @@ export default function Properties() {
     p.location?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const displayProperties = user?.role === "landlord"
+    ? filteredProperties.filter((p) => p.landlordID?.toString() === user._id?.toString())
+    : filteredProperties;
+
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-6">
 
@@ -137,7 +141,7 @@ export default function Properties() {
         {/* GRID */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
 
-          {filteredProperties.map((p) => (
+          {displayProperties.map((p) => (
             <PropertyCard
               key={p._id}
               property={p}
