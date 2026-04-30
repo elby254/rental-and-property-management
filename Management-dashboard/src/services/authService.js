@@ -1,35 +1,47 @@
-const BASE_URL = "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-// REGISTER
-export const registerUser = async (formData) => {
-  const res = await fetch(`${BASE_URL}/api/auth/register`, {
+export const loginUser = async (form) => {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include", // Required for cookie-based sessions
+    body: JSON.stringify({
+      phoneNumber: form.phoneNumber.trim(),
+      password: form.password,
+    }),
   });
 
-  return res.json();
+  const data = await res.json();
+
+  if (!res.ok) {
+    return { success: false, message: data.message || "Login failed." };
+  }
+
+  return { success: true, ...data };
 };
 
-// LOGIN
-export const loginUser = async (formData) => {
-  const res = await fetch(`${BASE_URL}/api/auth/login`, {
+export const registerUser = async (form) => {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include", // Required for cookie-based sessions
+    body: JSON.stringify({
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      phoneNumber: form.phoneNumber.trim(),
+      password: form.password,
+    }),
   });
 
-  return res.json();
-};
+  const data = await res.json();
 
-// PROFILE
-export const getProfile = async () => {
-  const res = await fetch(`${BASE_URL}/api/auth/profile`, {
-    method: "GET",
-    credentials: "include",
-  });
+  if (!res.ok) {
+    return { success: false, message: data.message || "Registration failed." };
+  }
 
-  return res.json();
+  return { success: true, ...data };
 };

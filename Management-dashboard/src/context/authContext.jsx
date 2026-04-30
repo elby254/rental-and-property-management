@@ -1,21 +1,22 @@
-// cookies based
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // LOGIN
+  // LOGIN — store user from successful login response
   const login = (data) => {
-   setUser(data.user); 
+    setUser(data.user);
   };
 
-  // LOGOUT
+  // LOGOUT — clear cookie session on server then clear local state
   const logout = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/auth/logout", {
+      const res = await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,16 +35,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // FETCH USER FROM COOKIE SESSION
+  // FETCH USER FROM COOKIE SESSION on initial load
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:3000/api/auth/profile",
-          {
-            credentials: "include",
-          }
-        );
+        const res = await fetch(`${API_URL}/api/auth/profile`, {
+          credentials: "include",
+        });
 
         const data = await res.json();
 
@@ -70,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// SAFE HOOK (IMPORTANT FIX)
+// SAFE HOOK — throws if used outside AuthProvider
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

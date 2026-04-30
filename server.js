@@ -16,6 +16,8 @@ const authRoutes = require("./routes/authRoutes");
 const propertyRoutes = require("./routes/propertyRoutes");
 const leaseRoutes = require("./routes/leaseRoutes");
 const maintenanceRoutes = require("./routes/maintenanceRoutes");
+const smsRoutes = require("./routes/smsRoutes");
+const at = require("./config/at");
 
 // connect DB
 connectDB();
@@ -46,12 +48,32 @@ app.use("/api/properties", require("./routes/propertyRoutes"));
 app.use("/api/bookings", require("./routes/bookingRoutes"));
 app.use("/api/leases", require("./routes/leaseRoutes"));
 app.use("/api/maintenance", require("./routes/maintenanceRoutes"));
+app.use("/api/sms", smsRoutes);
 
 // home route
 app.get("/", (req, res) => {
   res.json({
     message: "Rental Property Management API running ",
   });
+});
+
+// test SMS endpoint
+app.post("/test-sms", async (req, res) => {
+  try {
+    const result = await at.SMS.send({
+      to: "+254711111111",
+      message: "Test SMS"
+    });
+    res.json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 // start server
