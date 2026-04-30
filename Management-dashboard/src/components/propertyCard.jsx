@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 export default function PropertyCard({ property, onEdit, onDelete }) {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const isOwner =
+    user?.role === "landlord" &&
+    property.landlordID?.toString() === user._id;
 
   const image =
     property.images && property.images.length > 0
@@ -84,9 +87,11 @@ export default function PropertyCard({ property, onEdit, onDelete }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (!isOwner) return;
                   onEdit(property);
                 }}
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm"
+                disabled={!isOwner}
+                className={`px-3 py-1 rounded text-sm ${isOwner ? "bg-yellow-500 text-white hover:bg-yellow-600" : "bg-yellow-200 text-yellow-800 cursor-not-allowed"}`}
               >
                 Edit
               </button>
@@ -94,9 +99,11 @@ export default function PropertyCard({ property, onEdit, onDelete }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (!isOwner) return;
                   onDelete(property._id);
                 }}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+                disabled={!isOwner}
+                className={`px-3 py-1 rounded text-sm ${isOwner ? "bg-red-500 text-white hover:bg-red-600" : "bg-red-200 text-red-800 cursor-not-allowed"}`}
               >
                 Delete
               </button>
