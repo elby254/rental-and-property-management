@@ -90,7 +90,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
       return res.status(403).json({ message: "Only landlords allowed" });
     }
 
-    if (property.landlordID.toString() !== req.user._id) {
+    if (property.landlordID.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not your property" });
     }
 
@@ -119,7 +119,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
       return res.status(403).json({ message: "Only landlords allowed" });
     }
 
-    if (property.landlordID.toString() !== req.user._id) {
+    if (property.landlordID.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not your property" });
     }
 

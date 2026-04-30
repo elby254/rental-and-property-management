@@ -2,6 +2,7 @@ const cron = require("node-cron");
 const User = require("../models/User");
 const Property = require("../models/property");
 const at = require("../config/at");
+const { normalizePhoneNumber } = require("../utils/phone");
 
 const sms = at.SMS;
 
@@ -36,9 +37,7 @@ const startCronJobs = () => {
         const tenant = property.tenantID;
         if (!tenant || !tenant.phoneNumber) continue;
 
-        const formattedPhone = tenant.phoneNumber.startsWith("0")
-          ? "+254" + tenant.phoneNumber.slice(1)
-          : tenant.phoneNumber;
+        const formattedPhone = normalizePhoneNumber(tenant.phoneNumber);
 
         if (reminderDay) {
           await sms.send({

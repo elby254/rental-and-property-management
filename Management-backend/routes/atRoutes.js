@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const at = require("../config/at");
+const { normalizePhoneNumber } = require("../utils/phone");
 
 const sms = at.SMS;
 
@@ -39,9 +40,10 @@ router.post("/send-reminder", async (req, res) => {
     const { phoneNumber, amount } = req.body;
 
     const message = `Rent Reminder: KES ${amount} due.`;
+    const formattedPhone = normalizePhoneNumber(phoneNumber);
 
     const response = await sms.send({
-      to: [phoneNumber],
+      to: [formattedPhone],
       message,
     });
 

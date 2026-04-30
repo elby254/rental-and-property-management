@@ -7,6 +7,7 @@ const Property = require("../models/property");
 const Booking = require("../models/Booking");
 
 const at = require("../config/at");
+const { normalizePhoneNumber } = require("../utils/phone");
 const sms = at.SMS;
 
 
@@ -69,19 +70,16 @@ router.post("/pay", async (req, res) => {
       { status: "active", isPaid: true }
     );
 
-      // FORMAT PHONE 
-     const formattedPhone = phone.startsWith("0")
-      ? "+254" + phone.slice(1)
-       : phone;
+      const formattedPhone = normalizePhoneNumber(phone);
 
-     console.log("Sending SMS to:", formattedPhone, "Message:", `Payment of KES ${amount} received. Booking confirmed.`);
+      console.log("Sending SMS to:", formattedPhone, "Message:", `Payment of KES ${amount} received. Booking confirmed.`);
 
-     // SMS
-     try {
-     const smsResponse = await sms.send({
-      to: [formattedPhone],
-      message: `Payment of KES ${amount} received. Booking confirmed.`,
-     });
+      // SMS
+      try {
+        const smsResponse = await sms.send({
+          to: [formattedPhone],
+          message: `Payment of KES ${amount} received. Booking confirmed.`,
+        });
      console.log("SMS sent successfully:", smsResponse);
      } catch (smsError) {
      console.error("SMS error:", smsError.message);
@@ -171,9 +169,7 @@ router.post("/payment-callback", async (req, res) => {
 
       // SEND SMS SAFELY
       try {
-        const formattedPhone = phone.startsWith("0")
-          ? "+254" + phone.slice(1)
-          : phone;
+        const formattedPhone = normalizePhoneNumber(phone);
 
         console.log("Sending SMS to:", formattedPhone, "Message:", "Payment confirmed. Your booking is now active.");
 
