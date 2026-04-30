@@ -30,9 +30,8 @@ export const registerUser = async (form) => {
     },
     credentials: "include", // Required for cookie-based sessions
     body: JSON.stringify({
-      firstName: form.firstName.trim(),
-      lastName: form.lastName.trim(),
-      phoneNumber: form.phoneNumber.trim(),
+      name: (form.name || `${form.firstName || ""} ${form.lastName || ""}`).trim(),
+      phoneNumber: form.phoneNumber?.trim(),
       password: form.password,
     }),
   });

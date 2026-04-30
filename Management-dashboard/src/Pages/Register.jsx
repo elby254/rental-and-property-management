@@ -113,7 +113,8 @@ export default function Register() {
               onChange={handleChange}
               className="w-full border rounded-md p-2"
             >
-              <input type="hidden" name="role" value="tenant" />
+              <option value="tenant">Tenant</option>
+              <option value="landlord">Landlord</option>
             </select>
           </div>
 
