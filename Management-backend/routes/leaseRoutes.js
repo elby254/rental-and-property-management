@@ -79,7 +79,7 @@ router.get("/landlord-dashboard", authMiddleware, async (req, res) => {
 // DEBUG: Check all leases with property details
 router.get("/debug/all-leases", async (req, res) => {
   try {
-    const Property = require("../models/Property");
+    const Property = require("../models/property");
     
     // Get all active bookings
     const allLeases = await Booking.find({ status: "active" })

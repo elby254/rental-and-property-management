@@ -1,6 +1,6 @@
 const at = require("../config/at");
 const Payment = require("../models/Payment");
-const Property = require("../models/Property");
+const Property = require("../models/property");
 const User = require("../models/User");
 
 //  INITIATE PAYMENT SYSTEM

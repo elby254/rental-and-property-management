@@ -1,6 +1,6 @@
 const cron = require("node-cron");
 const User = require("../models/User");
-const Property = require("../models/Property");
+const Property = require("../models/property");
 const at = require("../config/at");
 
 const sms = at.SMS;

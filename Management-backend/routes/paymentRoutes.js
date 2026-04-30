@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const Payment = require("../models/Payment");
-const Property = require("../models/Property");
+const Property = require("../models/property");
 const Booking = require("../models/Booking");
 
 const at = require("../config/at");
