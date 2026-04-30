@@ -74,12 +74,15 @@ router.post("/pay", async (req, res) => {
       ? "+254" + phone.slice(1)
        : phone;
 
+     console.log("Sending SMS to:", formattedPhone, "Message:", `Payment of KES ${amount} received. Booking confirmed.`);
+
      // SMS
      try {
-     await sms.send({
+     const smsResponse = await sms.send({
       to: [formattedPhone],
       message: `Payment of KES ${amount} received. Booking confirmed.`,
      });
+     console.log("SMS sent successfully:", smsResponse);
      } catch (smsError) {
      console.error("SMS error:", smsError.message);
     }  
@@ -172,10 +175,13 @@ router.post("/payment-callback", async (req, res) => {
           ? "+254" + phone.slice(1)
           : phone;
 
-        await sms.send({
+        console.log("Sending SMS to:", formattedPhone, "Message:", "Payment confirmed. Your booking is now active.");
+
+        const smsResponse = await sms.send({
           to: [formattedPhone],
           message: "Payment confirmed. Your booking is now active.",
         });
+        console.log("SMS sent successfully:", smsResponse);
       } catch (smsError) {
         console.error("SMS error:", smsError.message);
       }
