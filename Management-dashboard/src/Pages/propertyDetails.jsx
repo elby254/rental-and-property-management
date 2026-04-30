@@ -74,10 +74,24 @@ const handlePayment = async () => {
   try {
     setPaying(true);
 
+    // Prompt for M-Pesa details
+    const phone = prompt("Enter your M-Pesa phone number (e.g., 254712345678):");
+    if (!phone) {
+      alert("Phone number is required");
+      return;
+    }
+
+    const pin = prompt("Enter your M-Pesa PIN:");
+    if (!pin) {
+      alert("PIN is required");
+      return;
+    }
+
     const payload = {
       tenantID: user._id || user.id,
       propertyID: property._id,
-      phone: user.phoneNumber || user.phone || user.contact,
+      phone: phone,
+      pin: pin,
       amount: property.price || property.Price,
     };
 
@@ -85,14 +99,19 @@ const handlePayment = async () => {
 
     const data = await payRent(payload);
 
+    console.log("Payment response:", data);
+
     if (data.success) {
       alert("Payment successful!");
+      // Optionally refresh property to update availability
+      fetchProperty();
     } else {
       alert(data.message || "Payment failed");
     }
 
   } catch (err) {
     console.error("Payment error:", err);
+    alert("An error occurred during payment");
   } finally {
     setPaying(false);
   }
@@ -162,7 +181,7 @@ const handlePayment = async () => {
         )}
 
         {/* PAYMENT BUTTON */}
-        {user && (
+        {user && booked && (
           <button
             onClick={handlePayment}
             disabled={paying}

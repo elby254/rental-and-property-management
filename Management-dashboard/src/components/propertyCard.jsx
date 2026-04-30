@@ -10,6 +10,9 @@ export default function PropertyCard({ property, onEdit, onDelete }) {
       ? property.images[0]
       : "https://via.placeholder.com/300";
 
+  const isPayDisabled = !property.isAvailable;
+  const payLabel = property.isAvailable ? "Pay Rent" : "Already Paid";
+
   return (
     <div
       onClick={() => navigate(`/property/${property._id}`)}
@@ -47,32 +50,59 @@ export default function PropertyCard({ property, onEdit, onDelete }) {
           {property.isAvailable ? "Available" : "Rented"}
         </span>
 
-        {/* ONLY LANDLORD CAN SEE THIS */}
-        {user?.role === "landlord" && (
-          <div className="flex gap-2 pt-3">
+        <div className="flex flex-wrap gap-2 pt-3">
+          {user?.role === "tenant" && (
+            <>
+              {property.isAvailable ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/property/${property._id}`);
+                  }}
+                  className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
+                >
+                  Book Property
+                </button>
+              ) : (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (isPayDisabled) return;
+                    navigate(`/property/${property._id}`);
+                  }}
+                  disabled={isPayDisabled}
+                  className={`px-3 py-1 rounded text-sm ${isPayDisabled ? "bg-gray-300 text-gray-700 cursor-not-allowed" : "bg-green-600 text-white hover:bg-green-700"}`}
+                >
+                  {payLabel}
+                </button>
+              )}
+            </>
+          )}
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(property);
-              }}
-              className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm"
-            >
-              Edit
-            </button>
+          {user?.role === "landlord" && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(property);
+                }}
+                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm"
+              >
+                Edit
+              </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(property._id);
-              }}
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
-            >
-              Delete
-            </button>
-
-          </div>
-        )}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(property._id);
+                }}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+              >
+                Delete
+              </button>
+            </>
+          )}
+        </div>
 
       </div>
 

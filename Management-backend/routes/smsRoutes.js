@@ -36,7 +36,8 @@ router.post("/send", async (req, res) => {
 
     const result = await sms.send({
       to,
-      message
+      message,
+      from: process.env.AT_SENDER_ID || "AFTKNG"
     });
 
     res.json({

@@ -3,6 +3,8 @@ import { useAuth } from "../context/AuthContext";
 import { createRequest } from "../services/maintainanceService";
 import GoBackButton from "../components/GoBackButton";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export default function Lease() {
 
   const { user } = useAuth();
@@ -15,7 +17,7 @@ export default function Lease() {
       console.log("Fetching leases...");
 
       const res = await fetch(
-        `http://localhost:3000/api/leases?userId=${userId}`,
+        `${API_URL}/api/leases?userId=${userId}`,
         {
           credentials: "include",
           cache: "no-store",
@@ -81,6 +83,7 @@ export default function Lease() {
   };
 
   useEffect(() => {
+    console.log("Lease useEffect, user:", user);
     if (!user?._id) return;
     fetchLeases(user._id);
   }, [user?._id]);

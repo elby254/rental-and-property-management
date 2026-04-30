@@ -99,5 +99,6 @@ export default function Payment() {
       </form>
 
     </div>
+  </div>
   );
 }
